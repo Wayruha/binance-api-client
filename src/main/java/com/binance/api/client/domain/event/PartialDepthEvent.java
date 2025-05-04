@@ -1,5 +1,6 @@
 package com.binance.api.client.domain.event;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -16,8 +17,11 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 public class PartialDepthEvent {
+    @JsonAlias({"lastUpdateId","E"})
     private long lastUpdateId;
+    @JsonAlias({"bids", "b"})
     private List<PriceLevel> bids;
+    @JsonAlias({"asks", "a"})
     private List<PriceLevel> asks;
 
     @JsonDeserialize(using = PriceLevelDeserializer.class)

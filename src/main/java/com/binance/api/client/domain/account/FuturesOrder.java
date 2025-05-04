@@ -3,6 +3,7 @@ package com.binance.api.client.domain.account;
 import com.binance.api.client.constant.BinanceApiConstants;
 import com.binance.api.client.domain.*;
 import com.binance.api.client.domain.event.TradeEvent;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -58,6 +59,7 @@ public class FuturesOrder implements OrderDetails {
 
     protected Boolean closePosition;
 
+    @JsonAlias({"time", "timestamp"})
     protected Long time;
 
     protected Long updateTime;

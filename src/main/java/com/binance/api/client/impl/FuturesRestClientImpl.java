@@ -1,8 +1,16 @@
 package com.binance.api.client.impl;
 
-import com.binance.api.client.*;
-import com.binance.api.client.domain.*;
-import com.binance.api.client.domain.account.*;
+import com.binance.api.client.BinanceFuturesEndpoints;
+import com.binance.api.client.FuturesIncomeType;
+import com.binance.api.client.FuturesRestClient;
+import com.binance.api.client.domain.FundingInfo;
+import com.binance.api.client.domain.MarginChangeType;
+import com.binance.api.client.domain.MarginType;
+import com.binance.api.client.domain.PositionSide;
+import com.binance.api.client.domain.account.FuturesAccountBalance;
+import com.binance.api.client.domain.account.FuturesOrder;
+import com.binance.api.client.domain.account.FuturesPosition;
+import com.binance.api.client.domain.account.NewOrderResponseType;
 import com.binance.api.client.domain.account.request.*;
 import com.binance.api.client.domain.general.ExchangeInfo;
 import com.binance.api.client.domain.market.TickerPrice;
@@ -10,11 +18,16 @@ import com.binance.api.client.domain.market.TickerPrice;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.binance.api.client.GlobalConfig.getCurrentTime;
-import static com.binance.api.client.config.BinanceApiConfig.*;
+import static com.binance.api.client.config.BinanceApiConfig.getFuturesBaseURL;
+import static com.binance.api.client.config.BinanceApiConfig.getFuturesTestnetUrl;
 import static com.binance.api.client.constant.BinanceApiConstants.DEFAULT_RECEIVING_WINDOW;
-import static com.binance.api.client.impl.BinanceApiServiceGenerator.*;
+import static com.binance.api.client.impl.BinanceApiServiceGenerator.createService;
+import static com.binance.api.client.impl.BinanceApiServiceGenerator.executeSync;
 
 /**
  * Implementation of Binance's REST API using Retrofit with synchronous/blocking method calls.
@@ -147,5 +160,16 @@ public class FuturesRestClientImpl implements FuturesRestClient {
     @Override
     public TickerPrice getSymbolPrice(String symbol) {
         return executeSync(binanceApiService.getSymbolPrice(symbol));
+    }
+
+    @Override
+    public Map<String, FundingInfo> getFundingInfo() {
+        return executeSync(binanceApiService.getFundingRates()).stream()
+                .collect(Collectors.toMap(FundingInfo::getSymbol, Function.identity()));
+    }
+
+    @Override
+    public Long getServerTime() {
+        return executeSync(binanceApiService.getServerTime()).getServerTime();
     }
 }

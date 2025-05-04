@@ -2,10 +2,14 @@ package com.binance.api.client;
 
 import com.binance.api.client.constant.BinanceApiConstants;
 import com.binance.api.client.domain.*;
-import com.binance.api.client.domain.account.*;
+import com.binance.api.client.domain.account.FuturesAccountBalance;
+import com.binance.api.client.domain.account.FuturesOrder;
+import com.binance.api.client.domain.account.FuturesPosition;
+import com.binance.api.client.domain.account.NewOrderResponseType;
 import com.binance.api.client.domain.account.request.*;
 import com.binance.api.client.domain.event.ListenKey;
 import com.binance.api.client.domain.general.ExchangeInfo;
+import com.binance.api.client.domain.general.ServerTime;
 import com.binance.api.client.domain.market.TickerPrice;
 import retrofit2.Call;
 import retrofit2.http.*;
@@ -13,6 +17,12 @@ import retrofit2.http.*;
 import java.util.List;
 
 public interface BinanceFuturesEndpoints {
+    @GET("/fapi/v1/time")
+    Call<ServerTime> getServerTime();
+
+    @GET("/fapi/v1/premiumIndex")
+    Call<List<FundingInfo>> getFundingRates();
+
     //Web Sockets
     //api weight: 1
     @Headers(BinanceApiConstants.ENDPOINT_SECURITY_TYPE_APIKEY_HEADER)

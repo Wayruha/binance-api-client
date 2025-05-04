@@ -6,14 +6,19 @@ import com.binance.api.client.domain.market.CandlestickInterval;
 import okhttp3.*;
 import org.apache.commons.lang3.NotImplementedException;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.binance.api.client.config.BinanceApiConfig.*;
+import static java.lang.String.format;
 
 /**
  * Binance API WebSocket client implementation using OkHttp.
  */
 public class FuturesWebSocketClient implements WebSocketClient {
+    protected static final List<Integer> VALID_ORDER_BOOK_DEPTH = List.of(5, 10, 20);
+
     protected final OkHttpClient client;
     protected final boolean isTestnet;
 
@@ -32,6 +37,16 @@ public class FuturesWebSocketClient implements WebSocketClient {
     @Override
     public WebSocket onUserDataUpdateEvent(String listenKey, WebSocketCallback<UserDataUpdateEvent> callback) {
         return createNewWebSocket(listenKey, new BinanceApiWebSocketListener<>(callback, UserDataUpdateEvent.class));
+    }
+
+    @Override
+    public WebSocket onPartialDepthEvent(String symbols, int depth, WebSocketCallback<PartialDepthEvent> callback) {
+        if(!VALID_ORDER_BOOK_DEPTH.contains(depth)) throw new IllegalArgumentException(format("Depth %s is not valid. Valid values: %s", depth, VALID_ORDER_BOOK_DEPTH));
+        final String channel = Arrays.stream(symbols.split(","))
+                .map(String::trim)
+                .map(s -> format("%s@depth%s", s, depth))
+                .collect(Collectors.joining("/"));
+        return createNewWebSocket(channel, new BinanceApiWebSocketListener<>(callback, PartialDepthEvent.class));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.binance.api.client;
 
+import com.binance.api.client.domain.FundingInfo;
 import com.binance.api.client.domain.MarginChangeType;
 import com.binance.api.client.domain.MarginType;
 import com.binance.api.client.domain.PositionSide;
@@ -14,10 +15,12 @@ import com.binance.api.client.domain.market.TickerPrice;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
 public interface FuturesRestClient extends BinWebSocketManager {
 
     ExchangeInfo getExchangeInfo();
+
     //Trade
     FuturesOrder newOrder(FuturesOrder orderRequest, NewOrderResponseType responseType);
 
@@ -51,4 +54,8 @@ public interface FuturesRestClient extends BinWebSocketManager {
     List<FuturesAllOpenOrdersResponse> getAllOpenOrders(String symbol);
 
     TickerPrice getSymbolPrice(String symbol);
+
+    Map<String, FundingInfo> getFundingInfo();
+
+    Long getServerTime();
 }

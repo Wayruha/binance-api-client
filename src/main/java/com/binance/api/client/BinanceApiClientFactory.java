@@ -91,7 +91,7 @@ public class BinanceApiClientFactory {
     /**
      * Creates a new web socket client used for handling data streams.
      */
-    public WebSocketClient newFuturesWebSocketClient() {
+    public FuturesWebSocketClient newFuturesWebSocketClient() {
         return new FuturesWebSocketClient(getSharedClient(), isTestnet);
     }
 
